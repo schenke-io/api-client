@@ -1,11 +1,15 @@
 <?php
 
-namespace SchenkeIo\ApiClient\Tests\Feature\Github;
+namespace SchenkeIo\ApiClient\Tests\Unit\Github;
 
 use SchenkeIo\ApiClient\BaseClient;
 
 class GitHubClient extends BaseClient
 {
+    protected bool $debug = false;
+
+    protected bool $verifySsl = false;
+
     /**
      * additional headers for authorization
      */
