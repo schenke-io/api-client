@@ -1,0 +1,10 @@
+<?php
+
+namespace SchenkeIo\ApiClient\Tests;
+
+use PHPUnit\Framework\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
+{
+    //
+}
