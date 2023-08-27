@@ -21,4 +21,4 @@ jobs:
         uses: php-actions/composer@v6
 
       - name: Execute PHPUnit tests
-        run: vendor/bin/phpunit
+        run: ./vendor/bin/phpunit -c phpunit.xml
