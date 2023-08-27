@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\ApiClient\Tests\Feature\Github;
 
-#use SchenkeIo\ApiClient\Tests\GitHubClient;
+//use SchenkeIo\ApiClient\Tests\GitHubClient;
 use SchenkeIo\ApiClient\Tests\TestCase;
 
 class ApiClientGithubTest extends TestCase
