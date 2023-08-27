@@ -20,7 +20,5 @@ jobs:
       - name: Install composer dependencies
         uses: php-actions/composer@v6
 
-      - name: PHPUnit Tests
-        uses: php-actions/phpunit@v3
-        with:
-          bootstrap: vendor/autoload.php
+      - name: Execute PHPUnit tests
+        run: vendor/bin/phpunit
