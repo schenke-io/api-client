@@ -17,8 +17,8 @@ jobs:
           extensions: dom, curl
           coverage: none
 
-      - name: Install composer dependencies
-        uses: php-actions/composer@v6
+      - name: Install Dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Execute PHPUnit tests
-        run: ./vendor/bin/phpunit -c phpunit.xml
+        run: vendor/bin/phpunit
