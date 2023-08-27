@@ -15,7 +15,7 @@ enum ApiType
     {
         return match ($this) {
             self::JSON => [
-                'Content-Type: application/json',
+                'Content-Type: application/json; charset=UTF-8',
                 'Accept: application/json',
             ],
             default => []

@@ -1,70 +1,47 @@
-# Simplify model relations in Laravel
+# Simple api client 
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/api-client.svg?style=flat-square)](https://packagist.org/packages/schenke-io/api-client)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/api-client/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/api-client/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/api-client/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/api-client/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/api-client.svg?style=flat-square)](https://packagist.org/packages/schenke-io/api-client)
 
-This package helps you to write better tests around model relations in Laravel. 
-It validates methods and the database schema setup for all the modells.
+simple CURL based api client for applications without a SDK
 
-## Installation
-
-You can install the package via composer:
+## Installation 
 
 ```bash
-composer require schenke-io/laravel-relation-manager
+composer require schenke-io/api-client
 ```
 
-## Usage
+## Usage 
 
-### Writing manual tests 
-
-You can enhance one of your tests with new assertions 
-related to model relations. 
-They will verify if the models have the 
-relations setup and are working with the database well (e.g. migrations).
-
-
-In this example the test verifies the following:
-+ `Country::class` exists and is a model
-+ `Capital::class` exists and is a model
-+ in `Country::class` is a HasOne-relation to `Capital::class` which works with the database 
-
+Build a local class which extends `BaseClient` or `BasejsonClient`.
 
 ```php
-# tests/Feature/ModelRelationTest.php 
-namespace Tests\Feature;
+#app/MyClass.php 
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\AssertModelRelationships;
-use App\Models\Country;
-use App\Models\Capital;
-use App\Models\Regions;
+class MyClass extends BaseClient {
 
-class ModelRelationTest extends TestCase 
-{
-    use RefreshDatabase;
-    use AssertModelRelationships;
-    
-    public function testCountryRelationships()
+    public function getAuthHeader(): array
     {
-        $this->assertModelHasOne(Country::class, Capital::Class);
+        return [
+            'Authorization: Bearer <YOUR-TOKEN>'
+        ];
     }
 }
 
 ```
-Another way to write the test is using full class names like:
+
+The use this class like this:
 ```php
+#app/MyClass.php 
 
-...
-
-        $this->assertModelHasOne('App\Models\Country', 'App\Models\Capital');
-
-...        
+$api = new MyClass('https://example.com/api/v2/');
+$result = $api->get('/users');
+print_r($result);
 
 ```
+
 
 
 ## Testing

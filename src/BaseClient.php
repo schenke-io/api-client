@@ -28,7 +28,9 @@ abstract class BaseClient
     /**
      * can be overwritten in extended classes
      */
-    protected bool $verifySsl = false;
+    protected bool $verifySsl = true;
+
+    protected string $userAgent = 'SchenkeIo-ApiClient';
 
     public function __construct(public readonly string $url)
     {
@@ -43,11 +45,12 @@ abstract class BaseClient
 
     /**
      * @param  array<string,mixed>  $data
+     * @param  array<string,mixed>  $urlData
      * @return array<string,mixed>
      */
     public function post(
+        string $urlPart,
         array $data,
-        string $urlPart = '',
         array $urlData = []
     ): array {
         $headers = $this->getHeaders();
@@ -67,7 +70,7 @@ abstract class BaseClient
      * @param  array<string,mixed>  $data
      * @return array<string,mixed>
      */
-    public function get(array $data = [], string $urlPart = ''): array
+    public function get(string $urlPart, array $data = []): array
     {
         $ch = $this->getConnection($this->getHeaders(), $urlPart, $data);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -90,8 +93,14 @@ abstract class BaseClient
     private function returnResponse(CurlHandle $ch): array
     {
         $response = curl_exec($ch);
+        if ($this->debug) {
+            echo "<<< return response\n";
+            print_r($response);
+        }
         if ($response === false) {
-            $return['error'] = curl_error($ch);
+            $return['_error'] = curl_error($ch);
+            $return['_url'] = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+            $return['_status'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         } else {
             $return = (array) json_decode($response, true);
         }
@@ -103,12 +112,12 @@ abstract class BaseClient
     private function getConnection(array $headers, string $urlPart = '', array $data = []): CurlHandle
     {
         $urlPart = ltrim($urlPart, '/');
-        $url = $this->url."/$urlPart";
+        $url = rtrim($this->url, '/')."/$urlPart";
         if (count($data) > 0) {
             $url .= '?'.http_build_query($data);
         }
         if ($this->debug) {
-            echo ">> url: $url\n";
+            echo ">> getConnection url: $url\n";
             print_r($headers);
             print_r($data);
         }
@@ -116,6 +125,8 @@ abstract class BaseClient
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_VERBOSE, $this->debug);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         if (! $this->verifySsl) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
